@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Library Management System</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        .available {
+            color: green;
+        }
+        .unavailable {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>Library Management System</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Type</th>
+                <th>Title</th>
+                <th>Details</th>
+                <th>Status</th>
+                <th>Due Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% items.forEach(function(item) { %>
+                <tr>
+                    <td><%= item.getId() %></td>
+                    <td><%= item.getType() %></td>
+                    <td><%= item.getTitle() %></td>
+                    <td>
+                        <% if (item.getType() === 'Book') { %>
+                            Author: <%= item.getAuthor() %><br>
+                            ISBN: <%= item.getIsbn() %>
+                        <% } else if (item.getType() === 'DVD') { %>
+                            Director: <%= item.getDirector() %><br>
+                            Duration: <%= item.getDuration() %> min
+                        <% } %>
+                    </td>
+                    <td class="<%= item.isAvailable() ? 'available' : 'unavailable' %>">
+                        <%= item.isAvailable() ? 'Available' : 'Checked Out' %>
+                    </td>
+                    <td><%= item.getDueDate() ? item.getDueDate().toLocaleDateString() : '-' %></td>
+                    <td>
+                        <% if (item.isAvailable()) { %>
+                            <form action="/checkout/<%= item.getId() %>" method="POST">
+                                <button type="submit">Check Out</button>
+                            </form>
+                        <% } else { %>
+                            <form action="/checkin/<%= item.getId() %>" method="POST">
+                                <button type="submit">Check In</button>
+                            </form>
+                        <% } %>
+                    </td>
+                </tr>
+            <% }); %>
+        </tbody>
+    </table>
+</body>
+</html>
